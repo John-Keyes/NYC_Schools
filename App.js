@@ -1,57 +1,32 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet, FlatList, Dimensions, Pressable} from 'react-native';
 import axios from 'axios';
-import crashlytics from '@react-native-firebase/crashlytics';
+//import crashlytics from '@react-native-firebase/crashlytics';
 import RenderItem from './RenderItem';
 
 const heightScale = Dimensions.get("window").height / 600;
 
-const scale1 = heightScale * 17;
-const scale2 = heightScale * 12;
+//const scale1 = heightScale * 17;
+//const scale2 = heightScale * 12;
 
 const App = () => {
     const [schools, setSchools] = useState({});
     useEffect(() => {
         let schoolsArray = [];
-        axios.get("https://data.cityofnewyork.us/resource/s3k6-pzi2.json").then(res => {
-            if (res.status == 200) {
-                axios.get("https://data.cityofnewyork.us/resource/f9bf-2cp4.json").then(res2 => {
-                    if (res2.status == 200) {
-                        InfoOrg(res, res2, schoolsArray);
-                        crashlytics().log("Second API Call Succeeded");
-                    } else { 
-                        console.log("CALL 2 ERROR" + err.message);
-                        crashlytics().log("Second API Call Failed");
-                    }
-                }).catch(err => console.log(err.message));
-            } else { 
-                console.log("CALL 1 ERROR" + err.message);
-                crashlytics().log("First API Call Failed");
-            }
-        }).catch(err => console.log(err.message));
+        const res = axios.get("https://data.cityofnewyork.us/resource/s3k6-pzi2.json");
+        const res2 = axios.get("https://data.cityofnewyork.us/resource/f9bf-2cp4.json");
+        axios.all([res, res2]).then(axios.spread((...responses) => InfoOrg(responses[0].data, responses[1].data, schoolsArray))).catch(err => {console.log(err.message); return false;});
 
-        crashlytics().log("App mounted.");
+        //crashlytics().log("App mounted.");
         
     }, []);
 
     const InfoOrg = (data, data2, schoolsArray) => {
+        //var dict = {};
         for(let i = 0; i < data.length; i++) {
             const resObj = data[i];
-            const key = resObj?.school_dbn;
-            /*
-            const dict = {
-                `${key}`: {
-                    dbn: key,
-                    schoolName: resObj?.school_name,
-                    overview: resObj?.overview_paragraph,
-                    neighborhood: resObj?.neighborhood,
-                    location: resObj?.location.split("(")[0]
-                }
-            };
-            const matchingObject = res2.data[key];
-            */
+            const key = resObj?.dbn;
             const matchingObject = data2.find(element => element.dbn == key);
-            console.log(matchingObject);
             schoolsArray.push({
                 dbn: key,
                 schoolName: resObj?.school_name,
@@ -73,18 +48,18 @@ const App = () => {
             <View style={styles.titleContainer}>
                 <Text style={styles.title}>NYC SCHOOLS</Text>
                 <Text style={styles.subtitle}>Click on a school name for more information.</Text>
-                <Pressable
+                {/*<Pressable
                 style={styles.crashButton}
                     onPress={() => crashlytics().crash()}
                 >
                     <Text style={{textAlign: "center", fontSize: scale2}}>Test Crash</Text>
-                </Pressable>
+                </Pressable>*/}
             </View>
             <FlatList
                 style={styles.container}
                 data={schools}
                 keyExtractor={(item) => item.dbn}
-                renderItem={({item}) => <RenderItem item={item} scale1={scale1} scale2={scale2}/>}
+                renderItem={({item}) => <RenderItem item={item} heightScale={heightScale}/>}
             />
         </View>
     );
@@ -97,24 +72,24 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center"
     },
-    crashButton: {
+    /*crashButton: {
         borderRadius: 20,
         backgroundColor: "blue",
         padding: 10,
         textAlign: "center"
-    },
+    },*/
     titleContainer: {
-        marginTop: "5%",
+        marginTop: "10%",
         alignItems: "center"
     },
     title: {
-        fontSize: scale1,
+        fontSize: heightScale * 17,
         fontWeight: "bold",
         color: "#000",
         textAlign: "center"
     },
     subtitle: {
-        fontSize: scale2,
+        fontSize: heightScale * 12,
         color: "#999"
     },
     container: {
@@ -122,8 +97,8 @@ const styles = StyleSheet.create({
         width: "90%",
         justifyContent: "center", 
         alignItems: "center",
-        borderWidth: 1, 
-        borderColor: "#000",
+        //borderWidth: 1, 
+        //borderColor: "#000",
         marginLeft: "5%",
         marginRight: "5%",
         marginTop: "10%",
