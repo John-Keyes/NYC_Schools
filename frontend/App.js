@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet, FlatList, Dimensions, Pressable} from 'react-native';
-import axios from 'axios';
-//import crashlytics from '@react-native-firebase/crashlytics';
+import {LINK} from "@env";
 import RenderItem from './RenderItem';
 
 const heightScale = Dimensions.get("window").height / 600;
@@ -12,36 +11,12 @@ const heightScale = Dimensions.get("window").height / 600;
 const App = () => {
     const [schools, setSchools] = useState({});
     useEffect(() => {
-        let schoolsArray = [];
-        const res = axios.get("https://data.cityofnewyork.us/resource/s3k6-pzi2.json");
-        const res2 = axios.get("https://data.cityofnewyork.us/resource/f9bf-2cp4.json");
-        axios.all([res, res2]).then(axios.spread((...responses) => InfoOrg(responses[0].data, responses[1].data, schoolsArray))).catch(err => {console.log(err.message); return false;});
-
-        //crashlytics().log("App mounted.");
+        //const res = axios.get("https://data.cityofnewyork.us/resource/s3k6-pzi2.json");
+        //const res2 = axios.get("https://data.cityofnewyork.us/resource/f9bf-2cp4.json");
+        const res = fetch(LINK, {method: "GET", mode: "cors"});
+        setSchools(res);
         
     }, []);
-
-    const InfoOrg = (data, data2, schoolsArray) => {
-        //var dict = {};
-        for(let i = 0; i < data.length; i++) {
-            const resObj = data[i];
-            const key = resObj?.dbn;
-            const matchingObject = data2.find(element => element.dbn == key);
-            schoolsArray.push({
-                dbn: key,
-                schoolName: resObj?.school_name,
-                overview: resObj?.overview_paragraph,
-                neighborhood: resObj?.neighborhood,
-                location: resObj?.location.split("(")[0],
-                numOfSATakers: matchingObject?.num_of_sat_test_takers,
-                readingAvg: matchingObject?.sat_critical_reading_avg_score,
-                mathAvg: matchingObject?.sat_math_avg_score,
-                writingAvg: matchingObject?.sat_writing_avg_score
-            });
-        }
-        //console.log(schoolsArray);
-        setSchools(schoolsArray);
-    }
 
     return (
         <View style={styles.main}>
@@ -52,7 +27,7 @@ const App = () => {
                 style={styles.crashButton}
                     onPress={() => crashlytics().crash()}
                 >
-                    <Text style={{textAlign: "center", fontSize: scale2}}>Test Crash</Text>
+                    <Text style={{textAlign: "center", fontSize: heightScale * 12}}>Test Crash</Text>
                 </Pressable>*/}
             </View>
             <FlatList
