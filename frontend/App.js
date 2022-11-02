@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { View, Text, StyleSheet, FlatList, Dimensions, Pressable} from 'react-native';
+import {View, Text, StyleSheet, FlatList, Dimensions, Pressable} from 'react-native';
 import {LINK} from "@env";
 import RenderItem from './RenderItem';
 
@@ -9,7 +9,7 @@ const heightScale = Dimensions.get("window").height / 600;
 //const scale2 = heightScale * 12;
 
 const App = () => {
-    const [schools, setSchools] = useState({});
+    const [schools, setSchools] = useState([]);
     useEffect(() => {
         //const res = axios.get("https://data.cityofnewyork.us/resource/s3k6-pzi2.json");
         //const res2 = axios.get("https://data.cityofnewyork.us/resource/f9bf-2cp4.json");
