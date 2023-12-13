@@ -6,7 +6,7 @@
     You can ignore the firebase crashlytics.
 
 # Used
-  - React-Native
+  - React-Native and Expo
   - Node for Backend
   - MySQL
   
