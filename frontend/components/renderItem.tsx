@@ -1,7 +1,13 @@
+import { SchoolType } from '@/models/schools';
 import React, {useState} from 'react';
 import {View, Text, Pressable, StyleSheet, Modal, ScrollView} from 'react-native';
 
-const RenderItem = ({item, heightScale}) => {
+type renderItemType = {
+    item: SchoolType, 
+    heightScale: number
+};
+
+const RenderItem = ({item, heightScale}: renderItemType) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [Elevation, setElevation] = useState(0);
     const [borderColor, setBorderColor] = useState("#999");
@@ -30,7 +36,7 @@ const RenderItem = ({item, heightScale}) => {
                         <Text style={{...styles.modalText, marginBottom: 0, fontSize: heightScale * 12}}>Number of SAT takers: {item.numOfSATakers}</Text>
                         <Text style={{...styles.modalText, marginBottom: 0, fontSize: heightScale * 12}}>Average SAT reading score: {item.readingAvg}</Text>
                         <Text style={{...styles.modalText, marginBottom: 0, fontSize: heightScale * 12}}>Average SAT math score: {item.mathAvg}</Text>
-    <Text style={{...styles.modalText, fontSize: heightScale * 12}}>Average SAT writing score: {item.writingAvg}</Text>
+                        <Text style={{...styles.modalText, fontSize: heightScale * 12}}>Average SAT writing score: {item.writingAvg}</Text>
                         <Pressable
                             onPress={() => setModalVisible(!modalVisible)}
                             style={styles.button}
