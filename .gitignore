@@ -3,6 +3,7 @@
 */Pipfile.lock
 *.env
 .mylogin.cnf
+*.setup-temp
 
 *.expo/
 */dist/

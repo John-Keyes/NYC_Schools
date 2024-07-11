@@ -3,27 +3,12 @@ export $(egrep -v '#' .env | xargs)
 DATE=$(date +%d%H%M)
 export FLASK_APP=./backend/index.py
 
+#setup function WIP
+
 run-backend() {
     cd backend
     pipenv run flask --debug run -h 0.0.0.0 -p $API_PORT
     cd ..
-}
-
-setup() {
-  cd frontend
-  npm i
-  if [ ! -s .env ] 
-  then
-    printf "DB_HOST=\"\"\nDB_USER=\"\"\nDB_ROOT_PWD=\"\"\nDB_PORT=3306\"\"\nDB_NAME=\"\"\nAPI_PORT=3093\"\"\nEXPO_PUBLIC_API_HOST=\"\"\n" >> .env
-  fi
-  touch .env
-  cd ../backend
-  if [ ! -s .env ] 
-  then
-    printf "DB_HOST=\"\"\nDB_USER=\"\"\nDB_PWD=\"\"\nDB_PORT=3306\"\"\nDB_NAME=\"\"\nAPI_PORT=3093\"\"\n" >> .env
-  fi
-  pipenv install
-  cd ..
 }
 
 migrate() {

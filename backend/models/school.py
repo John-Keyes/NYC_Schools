@@ -1,4 +1,4 @@
-class Schools:
+class School:
     def __init__(self, dbn, schoolName, overview):
         self.dbn = dbn
         self schoolName = schoolName,
